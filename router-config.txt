@@ -1,0 +1,133 @@
+============ KONFIGURASI ======================
+====== Router 1 ======
+== Basic Configuration
+enable
+configure terminal
+hostname R1
+service password-encryption
+enable secret encisco
+no ip domain-lookup
+ip domain-name digitalent.com
+banner motd #AUTHORIZED ACCESS ONLY #
+crypto key generate rsa general-keys modulus 1024
+username admin secret sshcisco
+line console 0
+password linecisco
+login
+exec-timeout 4
+line vty 0 4
+transport input ssh 
+exec-time 4
+login local
+exit
+ip ssh ver 2
+
+== Konfigurasi IP
+interface G0/0/0
+desc connected to SW1
+ip address 10.10.10.113 255.255.255.252
+no sh
+interface G0/0/1
+desc connected to SW2
+ip address 10.10.10.117 255.255.255.252
+no sh
+interface S0/1/0
+desc connected to R2
+ip address 10.10.10.121 255.255.255.252
+no sh
+interface s0/1/1
+desc connected to R3
+ip address 10.10.10.125 255.255.255.252
+no sh
+
+== Routing OSPF
+router ospf 1
+router-id 1.1.1.1
+network 10.10.10.112 0.0.0.3 area 0
+network 10.10.10.116 0.0.0.3 area 0
+network 10.10.10.120 0.0.0.3 area 0
+network 10.10.10.124 0.0.0.3 area 0
+
+do copy run start
+
+====== Router 2 ======
+== Basic Configuration
+enable
+configure terminal
+hostname R2
+service password-encryption
+enable secret encisco
+no ip domain-lookup
+ip domain-name digitalent.com
+banner motd #AUTHORIZED ACCESS ONLY#
+crypto key generate rsa general-keys modulus 1024
+username admin secret sshcisco
+line console 0
+password linecisco
+login
+exec-timeout 4
+line vty 0 4
+transport input ssh 
+exec-time 4
+login local
+exit
+ip ssh ver 2
+
+== Konfigurasi IP
+interface S0/1/0
+desc connected to R1
+ip address 10.10.10.122 255.255.255.252
+no sh
+interface G0/0/0
+desc connected to SW3
+ip address 10.10.10.129 255.255.255.252
+no sh
+
+== Routing OSPF
+router ospf 1
+router-id 2.2.2.2
+network 10.10.10.120 0.0.0.3 area 0
+network 10.10.10.128 0.0.0.3 area 0
+
+do copy run start
+
+====== Router 3 ======
+== Basic Configuration
+enable
+configure terminal
+hostname R3
+service password-encryption
+enable secret encisco
+no ip domain-lookup
+ip domain-name digitalent.com
+banner motd #AUTHORIZED ACCESS ONLY#
+crypto key generate rsa general-keys modulus 1024
+username admin secret sshcisco
+line console 0
+password linecisco
+login
+exec-timeout 4
+line vty 0 4
+transport input ssh 
+exec-time 4
+login local
+exit
+ip ssh ver 2
+
+== Konfigurasi IP
+interface S0/1/1
+desc connected to R1
+ip address 10.10.10.126 255.255.255.252
+no sh
+interface G0/0/0
+desc connected to SW4
+ip address 10.10.10.133 255.255.255.252
+no sh
+
+== Routing OSPF
+router ospf 1
+router-id 3.3.3.3
+network 10.10.10.124 0.0.0.3 area 0
+network 10.10.10.132 0.0.0.3 area 0
+
+do copy run start
