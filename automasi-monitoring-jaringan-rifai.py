@@ -13,7 +13,6 @@ def get_ticket():
     # Menentukan header dan data yang dibutuhkan untuk login
     headers = {"content-type": "application/json"}
     data = {"username": user, "password": password}
-
     # Membuat wadah untuk melakukan requests post untuk meminta ticket dalam bentuk json
     response = requests.post(base_url+"/ticket", headers=headers, json=data)
     ticket = response.json()
@@ -34,11 +33,26 @@ def get_network_device():
     ticket = get_ticket()
     headers = {"X-Auth-Token": ticket}
     response = requests.get(base_url+"/network-device", headers=headers)
+    print("===Mendapatkan Daftar Managed Device===")
+    print("Status Code : ",response.status_code)
     managed_device = response.json()
     networkDevices = managed_device["response"]
 
     for networkDevice in networkDevices:
         print(networkDevice["hostname"], "\t\t", networkDevice["platformId"], "\t", networkDevice["managementIpAddress"])
+
+# Fungsi untuk mendapatkan list host yang tersambung dengan jaringan
+def get_connected_hosts():
+    ticket = get_ticket()
+    headers = {"X-Auth-Token": ticket}
+    response = requests.get(base_url+"/host", headers=headers, verify=False)
+    print("===Mendapatkan Daftar Host===")
+    print("Status Code : ",response.status_code)
+    connectedDevices = response.json()
+    devices = connectedDevices["response"]
+    print("Device Name \t IP Address \t MAC Address \t Connected Port")
+    for device in devices:
+        print(device["hostName"], "\t", device["hostIp"], "\t", device["hostMac"], "\t\t", device["connectedInterfaceName"])
 
 # Membuat fungsi untuk monitoring kesehatan jaringan
 def get_network_health():
@@ -70,13 +84,12 @@ if __name__ == "__main__":
     print("===================================================================================")
     print("==============MONITORING JARINGAN MENGGUNAKAN SDN CONTROLLER REST API==============")
     print("===================FINAL PROJECT DTS-TSA NETWORK PROGRAMMABILITY===================")
-    print("========================MUHAMAMD MA'RUF NUR RIFAI/1910501038=======================")
+    print("========================MUHAMMAD MA'RUF NUR RIFAI/1910501038=======================")
     print("===================================================================================")
     print("Kode REST API : " + get_ticket())
     get_network_device_count()
-    print("Hostname \t Platform \t IPAddress")
     get_network_device()
-
+    get_connected_hosts()
     network_health = get_network_health()
     if int(network_health) < 100:
         issues = get_network_issues()
