@@ -14,7 +14,7 @@ def get_ticket():
     headers = {"content-type": "application/json"}
     data = {"username": user, "password": password}
 
-    # Membaut wadah untuk melakukan requests post untuk meminta ticket dalam bentuk json
+    # Membuat wadah untuk melakukan requests post untuk meminta ticket dalam bentuk json
     response = requests.post(base_url+"/ticket", headers=headers, json=data)
     ticket = response.json()
     # Parsing data untuk mendapatkan ticket
@@ -49,7 +49,7 @@ def get_network_health():
     network_health = health['response'][0]['networkDevices']['totalPercentage']
     return network_health
 
-# Membuat fungis untuk mendapatkan informasi masalah yang terdapat pada jaringan yang dimontiroing
+# Membuat fungsi untuk mendapatkan informasi masalah yang terdapat pada jaringan yang dimontiroing
 def get_network_issues():
     ticket = get_ticket()
     headers = {'Accept': 'application/yang-data+json', 'X-Auth-Token': ticket}
@@ -72,7 +72,6 @@ if __name__ == "__main__":
     print("===================FINAL PROJECT DTS-TSA NETWORK PROGRAMMABILITY===================")
     print("========================MUHAMAMD MA'RUF NUR RIFAI/1910501038=======================")
     print("===================================================================================")
-    print('Berhasil mendapatkan ticket')
     print("Kode REST API : " + get_ticket())
     get_network_device_count()
     print("Hostname \t Platform \t IPAddress")
